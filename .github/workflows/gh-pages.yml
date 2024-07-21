@@ -14,7 +14,8 @@
 
         - name: pnpm-setup
           uses: pnpm/action-setup@v2
-          
+          run: npm install -g pnpm
+
         - name: Install and Build
           run: |
             pnpm
