@@ -21,8 +21,8 @@
           run: |
             pnpm install
             pnpm run build
-        - name: Deploy 🚀 
-          uses: JamesIves/github-pages-deploy-action@4.6.1
+        - name: Deploy 🚀
+          uses: JamesIves/github-pages-deploy-action@v4
           with: 
             branch: gh-pages
             folder: dist
