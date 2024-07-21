@@ -11,6 +11,9 @@
       steps:
         - name: Checkout 🛎️
           uses: actions/checkout@master
+
+        - name: pnpm-setup
+          uses: pnpm/action-setup@v2
           
         - name: Install and Build
           run: |
