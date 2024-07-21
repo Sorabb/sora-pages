@@ -13,8 +13,7 @@
           uses: actions/checkout@master
 
         - name: pnpm-setup
-          uses: pnpm/action-setup@v2
-          run: npm install -g pnpm
+          uses: pnpm/action-setup@master
 
         - name: Install and Build
           run: |
