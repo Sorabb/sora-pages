@@ -21,6 +21,8 @@
           run: |
             pnpm install
             pnpm run build
+        - name: copy404page
+          run: cp dist/index.html dist/404.html
         - name: Deploy 🚀
           uses: JamesIves/github-pages-deploy-action@v4.6.1
           with: 
