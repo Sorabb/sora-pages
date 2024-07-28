@@ -7,9 +7,11 @@
     "allowJs": true,
     "jsx": "preserve",
     "moduleResolution": "node",
+    "baseUrl": "./src"
   },
   "include": [
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "global.d.ts"
   ]
 }

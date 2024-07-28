@@ -1,5 +1,6 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import styles from './style/index.module.scss';
 export default () => {
     return (
         <>
@@ -10,6 +11,7 @@ export default () => {
                 <Link to={'/demo'}>demo</Link>
             </div>
             <div>responsive-layout</div>
+            <div className={styles['wrap']}></div>
         </>
     )
 }

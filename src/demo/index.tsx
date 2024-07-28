@@ -11,6 +11,7 @@ export default () => {
             <div>
                 <h4>项目介绍</h4>
                 <div>无脚手架使用<b>webpack</b> + <b>react</b> + <b>react-router-dom</b>部署</div>
+                <div>github action实现cicd</div>
             </div>
             <div>
                 <h4>总结</h4>
@@ -22,12 +23,14 @@ export default () => {
                     但是有个天才说可以上传一个404文件，因为会走404文件，404文件跟index.html同内容的话，就相当于做了入口路由。</div>
                 </div>
                 <div>使用webpack插件来实现复制出404文件暂时没用好的解决办法，因为webpack是打包执行，需要一个打包成功后的操作</div>
+                <div>已由github action实现</div>
             <div>
                 <h4>todo</h4>
                 <div>接入ant-design</div>
                 <div>设置webpack-merge区分环境与打包</div>
                 <div>创建自己的prettir与eslint</div>
                 <div>管理pnpmrc与gh-pages不冲突</div>
+                <div>缺少一个reset.css</div>
             </div>
         </>
     )
