@@ -33,7 +33,12 @@ const config = {
         rules: [
             {
                 test: /\.(ts|tsx)$/i,
-                use: ['ts-loader','babel-loader'],
+                use: [{
+                    loader: 'ts-loader',
+                    options: {
+                        transpileOnly: true
+                    }
+                },'babel-loader'],
                 exclude: ['/node_modules/'],
             },
             {

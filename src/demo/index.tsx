@@ -25,13 +25,19 @@ export default () => {
                 </div>
                 <div>使用webpack插件来实现复制出404文件暂时没用好的解决办法，因为webpack是打包执行，需要一个打包成功后的操作</div>
                 <div>已由github action实现</div>
+                <div>实现css模块引入，遇到两个问题</div>
+                <div>1:引入的css模块报错 Cannot read properties of undefined。</div>
+                <div>解决：降级css-loader，最新7.1.2版本降级到^6.8.1</div>
+                <div>2:因为css模块引入需要ts声明，加入了global.d.ts，在tsconfig.json引入后会报错Error: The loaded module contains errors</div>
+                <div>解决：参考https://github.com/babel/babel-loader/issues/912，在ts-loader里的加入options：transpileOnly:true</div>
             <div>
                 <h4>todo</h4>
                 <div>接入ant-design</div>
                 <div>设置webpack-merge区分环境与打包</div>
                 <div>创建自己的prettir与eslint</div>
                 <div>管理pnpmrc与gh-pages不冲突</div>
-                <div>缺少一个reset.css</div>3123122312
+                <div><strike>缺少一个reset.css</strike></div>
+                <div>从webpack更换成 <a href="https://turbo.build" target='_blank'>Turborepo</a></div>
             </div>
         </>
     )

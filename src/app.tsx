@@ -4,6 +4,7 @@ import Home from './index';
 import Demo from './demo';
 import DemoResponsive from './demo/responsive-layout';
 import Result404 from './exception/404';
+import '@csstools/normalize.css';
 import {
     createBrowserRouter,
     BrowserRouter,

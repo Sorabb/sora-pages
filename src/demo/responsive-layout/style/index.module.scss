@@ -1,4 +1,32 @@
+:global {
+  body {
+    height: 100vh;
+    margin: 0;
+  }
+}
 .wrap {
-  background: red;
-  padding: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  .content {
+    padding: 10px;
+    height: 100%;
+    box-sizing: border-box;
+    .main {
+      box-sizing: border-box;
+      border: 1px solid #ddd;
+      width: 1280px;
+      margin: 0 auto;
+      height: 100%;
+      box-shadow: rgba(134, 138, 165, 0.41) 0 0 12px 0;
+      .main-title {
+        text-align: center;
+        line-height: 44px;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+  }
+
 }
