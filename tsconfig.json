@@ -1,17 +1,27 @@
 {
   "compilerOptions": {
+    "baseUrl": "./src",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "module": "es6",
     "target": "es5",
     "allowJs": true,
     "jsx": "preserve",
+    "esModuleInterop": true,
     "moduleResolution": "node",
-    "baseUrl": "./src"
+    "skipLibCheck": true,
+    "noEmitOnError": true,
+    "outDir": "./dist",
+    "rootDir": "./src", 
+    "incremental": true,
+    "resolveJsonModule": true,
   },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
+    "src/**/*",
     "global.d.ts"
   ]
 }

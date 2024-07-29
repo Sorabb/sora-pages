@@ -37,13 +37,30 @@ const config = {
                 exclude: ['/node_modules/'],
             },
             {
-                test: /\.s[ac]ss$/i,
-                use: [stylesHandler, {
-                    loader: 'css-loader',
-                    options: {
-                        modules: true,
+                test: /\.module\.scss$/i,
+                use: [
+                    stylesHandler,
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            modules: {
+                                localIdentName: '[name]__[local]___[hash:base64:5]',
+                            },
+                        },
                     },
-                }, 'postcss-loader', 'sass-loader'],
+                    'postcss-loader',
+                    'sass-loader',
+                ],
+            },
+            {
+                test: /\.scss$/i,
+                exclude: /\.module\.scss$/,
+                use: [
+                    stylesHandler,
+                    'css-loader',
+                    'postcss-loader',
+                    'sass-loader',
+                ],
             },
             {
                 test: /\.css$/i,
@@ -59,15 +76,13 @@ const config = {
         ],
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.jsx', '.js', '...'],
+        extensions: ['.tsx', '.ts', '.jsx', '.js', '.scss'],
     },
 };
 
 module.exports = () => {
     if (isProduction) {
         config.mode = 'production';
-        
-        
     } else {
         config.mode = 'development';
     }

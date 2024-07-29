@@ -1,9 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import './style/index.scss'
 export default () => {
     return (
         <>
-            <div>
+            <div className="wrap">
                 <div><Link to={'responsive-layout'}>responsive-layout</Link></div>
                 <div><Link to={'/'}>home</Link></div>
             </div>
@@ -30,7 +31,7 @@ export default () => {
                 <div>设置webpack-merge区分环境与打包</div>
                 <div>创建自己的prettir与eslint</div>
                 <div>管理pnpmrc与gh-pages不冲突</div>
-                <div>缺少一个reset.css</div>
+                <div>缺少一个reset.css</div>3123122312
             </div>
         </>
     )
