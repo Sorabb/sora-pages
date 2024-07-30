@@ -1,6 +1,7 @@
 // Generated using webpack-cli https://github.com/webpack/webpack-cli
 
 const path = require('path');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
@@ -25,7 +26,7 @@ const config = {
         new HtmlWebpackPlugin({
             template: 'index.html',
         }),
-
+        new ForkTsCheckerWebpackPlugin(),
         // Add your plugins here
         // Learn more about plugins from https://webpack.js.org/configuration/plugins/
     ],
@@ -35,6 +36,7 @@ const config = {
                 test: /\.(ts|tsx)$/i,
                 use: [{
                     loader: 'ts-loader',
+
                 },'babel-loader'],
                 exclude: ['/node_modules/'],
             },
@@ -45,6 +47,7 @@ const config = {
                     {
                         loader: 'css-loader',
                         options: {
+                            importLoaders: 2,
                             modules: {
                                 localIdentName: '[name]__[local]___[hash:base64:5]',
                             },

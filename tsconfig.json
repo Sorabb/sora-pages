@@ -1,27 +1,31 @@
 {
+  "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": false,
-    "module": "es6",
-    "target": "es5",
+    "module": "esnext",
+    "target": "es2015",
     "allowJs": true,
+    "lib": ["es2020", "dom"],
     "jsx": "preserve",
     "esModuleInterop": true,
     "moduleResolution": "node",
     "skipLibCheck": true,
     "noEmitOnError": true,
-    "outDir": "./dist",
-    "rootDir": "./src", 
+    "rootDir": ".",
     "incremental": true,
+    "skipDefaultLibCheck": true,
     "resolveJsonModule": true,
+    "outDir": "dist",
+    "declaration": true,
   },
   "exclude": [
     "node_modules",
     "dist"
   ],
   "include": [
-    "src/**/*",
+    "./**/*",
     "global.d.ts"
   ]
 }

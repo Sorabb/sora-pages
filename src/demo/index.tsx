@@ -31,6 +31,8 @@ export default () => {
                 <div>2:因为css模块引入需要ts声明，加入了global.d.ts，在tsconfig.json引入后会报错Error: The loaded module contains errors</div>
                 <div>解决：参考https://github.com/babel/babel-loader/issues/912，在ts-loader里的加入options：transpileOnly:true</div>
                 <div>更新：缺少@babel/preset-typescript，安装之后修复</div>
+                <div>3:去掉transpileOnly:true之后，热重载会丢失module的定义</div>
+                <div>解决：参考ts-loader文档的transpileOnly，使用fork-ts-checker-webpack-plugin插件编译加速ts-loader</div>
             <div>
                 <h4>todo</h4>
                 <div>接入ant-design</div>
