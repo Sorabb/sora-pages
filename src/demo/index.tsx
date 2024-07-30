@@ -30,6 +30,7 @@ export default () => {
                 <div>解决：降级css-loader，最新7.1.2版本降级到^6.8.1</div>
                 <div>2:因为css模块引入需要ts声明，加入了global.d.ts，在tsconfig.json引入后会报错Error: The loaded module contains errors</div>
                 <div>解决：参考https://github.com/babel/babel-loader/issues/912，在ts-loader里的加入options：transpileOnly:true</div>
+                <div>更新：缺少@babel/preset-typescript，安装之后修复</div>
             <div>
                 <h4>todo</h4>
                 <div>接入ant-design</div>

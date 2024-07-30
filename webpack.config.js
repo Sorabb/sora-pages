@@ -35,9 +35,6 @@ const config = {
                 test: /\.(ts|tsx)$/i,
                 use: [{
                     loader: 'ts-loader',
-                    options: {
-                        transpileOnly: true
-                    }
                 },'babel-loader'],
                 exclude: ['/node_modules/'],
             },

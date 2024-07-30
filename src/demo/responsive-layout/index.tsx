@@ -1,8 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Context, useContext } from "react";
 import {Link} from "react-router-dom";
 import styles from './style/index.module.scss';
 import ResponsiveItem from './components/ResponsiveItem';
+import ResponsiveContextProvider, {ResponsiveContext} from './context';
 const WorkspaceAttribute = () => {
+    const {select} = useContext(ResponsiveContext);
+    console.log(select)
     return (
         <div className={styles['workspace-attribute']}>
             <div className={styles['workspace-attribute-title']}>
@@ -28,20 +31,22 @@ export default () => {
                 <Link to={'/demo'}>demo</Link>
             </div>
             <div>responsive-layout321321</div>*/}
-            <div className={styles['wrap']}>
-                <div className={styles['workspace-main']}>
-                    <div className={styles['workspace-container']}>
-                        <div className={styles['responsive-layout-container']}>
-                            <div className={styles['responsive-layout-main-title']}>responsive-layout</div>
-                            <div className={styles['responsive-layout-main-content']}>
-                                <ResponsiveItem />
+            <ResponsiveContextProvider>
+                <div className={styles['wrap']}>
+                    <div className={styles['workspace-main']}>
+                        <div className={styles['workspace-container']}>
+                            <div className={styles['responsive-layout-container']}>
+                                <div className={styles['responsive-layout-main-title']}>responsive-layout</div>
+                                <div className={styles['responsive-layout-main-content']}>
+                                    <ResponsiveItem />
+                                </div>
                             </div>
                         </div>
+                        <WorkspaceAttribute />
                     </div>
-                    <WorkspaceAttribute />
-                </div>
 
-            </div>
+                </div>
+            </ResponsiveContextProvider>
         </>
     )
 }
