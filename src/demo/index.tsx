@@ -36,7 +36,7 @@ export default () => {
                 <div>设置webpack-merge区分环境与打包</div>
                 <div>创建自己的prettir与eslint</div>
                 <div>管理pnpmrc与gh-pages不冲突</div>
-                <div><strike>缺少一个reset.css</strike></div>
+                <div><span style={{textDecoration : 'line-through'}}>缺少一个reset.css</span></div>
                 <div>从webpack更换成 <a href="https://turbo.build" target='_blank'>Turborepo</a></div>
             </div>
         </>
