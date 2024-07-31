@@ -1,7 +1,7 @@
-import React, { useEffect, Context, useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import {Link} from "react-router-dom";
 import styles from './style/index.module.scss';
-import ResponsiveItem from './components/ResponsiveItem';
+import ResponsiveContainer from './components/ResponsiveContainer';
 import ResponsiveContextProvider, {ResponsiveContext} from './context';
 const WorkspaceAttribute = () => {
     const {select} = useContext(ResponsiveContext);
@@ -38,7 +38,7 @@ export default () => {
                             <div className={styles['responsive-layout-container']}>
                                 <div className={styles['responsive-layout-main-title']}>responsive-layout</div>
                                 <div className={styles['responsive-layout-main-content']}>
-                                    <ResponsiveItem />
+                                    <ResponsiveContainer />
                                 </div>
                             </div>
                         </div>

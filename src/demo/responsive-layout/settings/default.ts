@@ -4,9 +4,7 @@ export const gridMap = {
 }
 export const includeData = [
     {
-        ResponsiveItem: {
-            grid: '1/1/2/2'
-        }
+        grid: '1/1/2/2'
     }
 ]
 
