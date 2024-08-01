@@ -263,6 +263,7 @@ export default () => {
 
     },[pageData,gridTemplateData,sizeMap,containefWidth]);
     useLayoutEffect(() => {
+        console.log(containerRef.current.getBoundingClientRect().width)
         setContainefWidth(containerRef.current.getBoundingClientRect().width);
     }, [gridTemplateData]);
     return (

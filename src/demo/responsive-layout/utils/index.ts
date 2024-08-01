@@ -1,4 +1,5 @@
 import {customAlphabet} from "nanoid";
+import lodash from 'lodash';
 export const nanoid = () => {
     return customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',1)() +
         customAlphabet('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',20)();
@@ -120,4 +121,124 @@ export const makeLines = (grids) => {
     mergeLine(allLine)
     return allLine;
 }
+// 如果xy有完全重复，就合并这一行列
+const reduceMap = (gridMap, gridSizeMap) => {
+    let checkStatus = {
+        xneedcheck: true,
+        yneedcheck: true
+    };
+    const checkY = () => {
+        let change = false;
+        if (gridMap.length > 1) {
+            for (let i = 1; i < gridMap.length; ) {
+                if (lodash.isEqual(gridMap[i], gridMap[i - 1])) {
+                    gridMap.splice(i, 1);
+                    gridSizeMap.y.splice(i, 1);
+                    change = true;
+                } else {
+                    i++;
+                }
+            }
+        }
+        checkStatus.yneedcheck = false;
+        if (change == true) {
+            checkStatus.xneedcheck = true;
+        }
+        if (checkStatus.xneedcheck) {
+            checkX();
+        }
+    };
+    const checkX = () => {
+        let change = false;
+        if (gridMap[0].length > 1) {
+            for (let i = 1; i < gridMap[0].length; ) {
+                let same = true;
+                for (let j = 0; j < gridMap.length; j++) {
+                    if (gridMap[j][i] != gridMap[j][i - 1]) {
+                        same = false;
+                        break;
+                    }
+                }
+                if (same) {
+                    for (let j = 0; j < gridMap.length; j++) {
+                        gridMap[j].splice(i, 1);
+                    }
+                    gridSizeMap.x.splice(
+                        i - 1,
+                        2,
+                        gridSizeMap.x[i - 1] + gridSizeMap.x[i]
+                    );
+                    change = true;
+                } else {
+                    i++;
+                }
+            }
+        }
+        checkStatus.xneedcheck = false;
+        if (change == true) {
+            checkStatus.yneedcheck = true;
+        }
+        if (checkStatus.yneedcheck) {
+            checkY();
+        }
+    };
+    checkY();
+    return gridMap;
+};
+// 根据所有单元格grid生成坐标map
+export const makeGridMap = (arr) => {
+    const arrInfo = arr.map((i) => {
+        return {
+            id: i.com_id,
+            grid: i.grid.split('/').map(Number)
+        };
+    });
+    let heightNum = 0;
+    let widthNum = 0;
+    for (const i of arrInfo) {
+        if (i.grid[2] - 1 > heightNum) {
+            heightNum = i.grid[2] - 1;
+        }
+        if (i.grid[3] - 1 > widthNum) {
+            widthNum = i.grid[3] - 1;
+        }
+    }
+    const gridMap = Array.from({length: heightNum}, () => new Array(widthNum));
+    for (const item of arrInfo) {
+        for (let x = item.grid[1]; x < item.grid[3]; x++) {
+            for (let y = item.grid[0]; y < item.grid[2]; y++) {
+                gridMap[y - 1][x - 1] = item.id;
+            }
+        }
+    }
+    return gridMap;
+    // console.log(arrInfo);
+};
+//根据坐标map生成所有单元格grid信息
+export const makeGridInfo = (map, gridSizeMap) => {
+    map = reduceMap(map, gridSizeMap);
+    const newGridInfoData = {};
+    for (let y = 0; y < map.length; y++) {
+        for (let x = 0; x < map[0].length; x++) {
+            if (!newGridInfoData[map[y][x]]) {
+                newGridInfoData[map[y][x]] = [y + 1, x + 1, y + 2, x + 2];
+            } else {
+                if (x + 2 > newGridInfoData[map[y][x]][3]) {
+                    newGridInfoData[map[y][x]][3] = x + 2;
+                }
+                if (y + 2 > newGridInfoData[map[y][x]][2]) {
+                    newGridInfoData[map[y][x]][2] = y + 2;
+                }
+            }
+        }
+    }
+    return newGridInfoData;
+};
+//根据所有单元格grid信息重新排列所有单元格grid
+// 不知道为什么会导致reducer反复执行，先不使用
+export const rearrangeGrid = (database, gridInfo) => {
+    for (const i in gridInfo) {
+        database[i].grid = gridInfo[i].join('/');
+    }
+};
 export default null;
