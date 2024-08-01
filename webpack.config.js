@@ -13,6 +13,7 @@ const stylesHandler = 'style-loader';
 
 const config = {
     entry: './src/app',
+    devtool: 'source-map',
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, 'dist'),

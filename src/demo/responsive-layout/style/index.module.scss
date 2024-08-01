@@ -49,14 +49,31 @@ $right-width: 250px;
         border-bottom: 1px solid #ddd;
       }
       .responsive-layout-main-content {
-        flex:1;
-        overflow-y: scroll;
-        background-color: rgb(249, 249, 249);
-        padding: 20px 0;// 上下留出线的位置
+        flex: 1;
       }
     }
   }
-
+}
+.responsive-layout-inner-container {
+  width: 100%;
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  overflow-y: scroll;
+  background-color: rgb(249, 249, 249);
+  overflow-x: visible;
+  display: flex;
+  flex-direction: column;
+  .responsive-layout-inner-header {
+    height: 20px;
+  }
+  .responsive-layout-inner-footer {
+    height: 20px;
+  }
+  .responsive-layout-inner-content {
+    flex: 1;
+    position: relative;
+  }
 }
 .topline {
   background-color: #2149a450;
@@ -64,7 +81,7 @@ $right-width: 250px;
   z-index: 10;
   &:hover {
     background-color: #2149a4;
-    &::before {
+    /* &::before {
       content: '';
       position: absolute;
       top: -1px;
@@ -81,7 +98,7 @@ $right-width: 250px;
       right: 0;
       height: 1px;
       background-color: #2149a4;
-    }
+    } */
   }
 }
 .bothline {
@@ -90,7 +107,7 @@ $right-width: 250px;
   z-index: 10;
   &:hover {
     background-color: #2149a4;
-    &::before {
+    /* &::before {
       content: '';
       position: absolute;
       left: -1px;
@@ -107,7 +124,7 @@ $right-width: 250px;
       bottom: 0;
       width: 1px;
       background-color: #2149a4;
-    }
+    } */
   }
 }
 .xline {

@@ -1,12 +1,10 @@
 import React , {useContext, useMemo,useRef,useLayoutEffect,useState} from "react";
-
 import {ResponsiveContext} from '../../context';
 import ResponsiveItem from "../ResponsiveItem";
 import Draggable from 'react-draggable';
 import {makeLines} from "../../utils";
 import styles from '../../style/index.module.scss';
 export default () => {
-
     const containerRef = useRef(null);
     const [containefWidth, setContainefWidth] = useState(0);
     const {pageData,state:{gridSizeMap:sizeMap}} = useContext(ResponsiveContext);
@@ -38,12 +36,16 @@ export default () => {
         return gridTemplateData;
     }, [sizeMap]);
     const LineGroupContent = useMemo(() => {
+        if (containefWidth == 0) {
+            return <></>
+        }
         const allGrid = pageData.map((i) => {
             return i.grid.split('/').map(Number);
         });
         const lineData = makeLines(allGrid);
         const bottomLine = (
             <Draggable
+                key={'bottomLine'}
                 position={{x: 0, y: 0}}
                 bounds={{
                     top: -(sizeMap.y[sizeMap.y.length - 1] - 6)
@@ -60,8 +62,7 @@ export default () => {
                 <div
                     className={styles['xline']}
                     style={{
-                        marginTop: '-1px',
-                        height: '2px',
+                        height: '1px',
                         width:
                             sizeMap.x.reduce(
                                 (accumulator, currentValue) =>
@@ -73,23 +74,23 @@ export default () => {
                                 (accumulator, currentValue) =>
                                     accumulator + currentValue,
                                 0
-                            ) + 'px',
+                            ) -1 + 'px',
                         left: 0
                     }}></div>
             </Draggable>
         );
         const topLIne = (
             <div
+                key={'topLIne'}
                 className={styles['topline']}
                 style={{
-                    marginTop: '-1px',
                     width:
                         sizeMap.x.reduce(
                             (accumulator, currentValue) =>
                                 accumulator + currentValue,
                             0
                         ) + '%',
-                    height: '2px',
+                    height: '1px',
                     top: 0,
                     left: 0
                 }}></div>
@@ -97,151 +98,154 @@ export default () => {
 
         const RightLine = (
             <div
+                key={'RightLine'}
                 className={styles['bothline']}
                 style={{
-                    marginRight: '-1px',
                     height:
                         sizeMap.y.reduce(
                             (accumulator, currentValue) =>
                                 accumulator + currentValue,
                             0
                         ) + 'px',
-                    width: '2px',
+                    width: '1px',
                     top: 0,
-                    right: 0
+                    right: '0'
                 }}></div>
         );
 
         const LeftLine = (
             <div
+                key={'LeftLine'}
                 className={styles['bothline']}
                 style={{
-                    marginLeft: '-1px',
                     height:
                         sizeMap.y.reduce(
                             (accumulator, currentValue) =>
                                 accumulator + currentValue,
                             0
                         ) + 'px',
-                    width: '2px',
+                    width: '1px',
                     left: 0,
                     top: 0
                 }}></div>
         );
-        if (!lineData) {
-            return [bottomLine, topLIne, RightLine, LeftLine];
-        }
         const alllines = [];
-        const lineXgroup = Object.keys(lineData.x);
-        const lineYgroup = Object.keys(lineData.y);
-        for (const i of lineXgroup) {
-            for (const j of lineData.x[i]) {
-                const index = Number(i) - 2;
-                alllines.push(
-                    <Draggable
-                        position={{x: 0, y: 0}}
-                        bounds={{
-                            top: -(sizeMap.y[index] - 6),
-                            bottom: sizeMap.y[index + 1] - 6
-                        }}
-                        axis="y"
-                        onMouseDown={(e) => {
-                            console.log(`dragLine(e, 'y');`)
-                        }}
-                        onStop={(e, data) => {
-                            console.log(`onHandleStop(data, index);`)
-                        }}>
-                        <div
-                            className={styles['xline']}
-                            style={{
-                                marginTop: '-1px',
-                                height: '2px',
-                                width:
-                                    sizeMap.x
-                                        .slice(j.start - 1, j.end - 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + '%',
-                                top:
-                                    sizeMap.y
-                                        .slice(0, index + 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + 'px',
-                                left:
-                                    sizeMap.x
-                                        .slice(0, j.start - 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + '%'
-                            }}></div>
-                    </Draggable>
-                );
-            }
-        }
-        for (const i of lineYgroup) {
-            for (const j of lineData.y[i]) {
-                const index = Number(i) - 2;
-                alllines.push(
-                    <Draggable
-                        position={{x: 0, y: 0}}
-                        bounds={{
-                            left:
-                                -(containefWidth * (sizeMap.x[index] - 6)) /
-                                100,
-                            right:
-                                (containefWidth * (sizeMap.x[index + 1] - 6)) /
-                                100
-                        }}
-                        axis="x"
-                        onMouseDown={(e) => {
-                            console.log(`dragLine(e, 'x');`)
-                        }}
-                        onStop={(e, data) => {
-                            console.log(`onHandleStop(data, index);`);
-                        }}>
-                        <div
-                            className={styles['yline']}
-                            style={{
-                                width: '2px',
-                                marginLeft: '-1px',
-                                height:
-                                    sizeMap.y
-                                        .slice(j.start - 1, j.end - 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + 'px',
-                                left:
-                                    sizeMap.x
-                                        .slice(0, index + 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + '%',
-                                top:
-                                    sizeMap.y
-                                        .slice(0, j.start - 1)
-                                        .reduce(
-                                            (accumulator, currentValue) =>
-                                                accumulator + currentValue,
-                                            0
-                                        ) + 'px'
-                            }}></div>
-                    </Draggable>
-                );
-            }
-        }
 
-        alllines.push(bottomLine, topLIne, RightLine, LeftLine);
+        if (!lineData) {
+            alllines.push(bottomLine, topLIne, RightLine, LeftLine);
+        } else {
+
+            const lineXgroup = Object.keys(lineData.x);
+            const lineYgroup = Object.keys(lineData.y);
+            for (const i of lineXgroup) {
+                for (const j of lineData.x[i]) {
+                    const index = Number(i) - 2;
+                    alllines.push(
+                        <Draggable
+                            position={{x: 0, y: 0}}
+                            bounds={{
+                                top: -(sizeMap.y[index] - 6),
+                                bottom: sizeMap.y[index + 1] - 6
+                            }}
+                            axis="y"
+                            onMouseDown={(e) => {
+                                console.log(`dragLine(e, 'y');`)
+                            }}
+                            onStop={(e, data) => {
+                                console.log(`onHandleStop(data, index);`)
+                            }}>
+                            <div
+                                className={styles['xline']}
+                                style={{
+                                    marginTop: '-1px',
+                                    height: '2px',
+                                    width:
+                                        sizeMap.x
+                                            .slice(j.start - 1, j.end - 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + '%',
+                                    top:
+                                        sizeMap.y
+                                            .slice(0, index + 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + 'px',
+                                    left:
+                                        sizeMap.x
+                                            .slice(0, j.start - 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + '%'
+                                }}></div>
+                        </Draggable>
+                    );
+                }
+            }
+            for (const i of lineYgroup) {
+                for (const j of lineData.y[i]) {
+                    const index = Number(i) - 2;
+                    alllines.push(
+                        <Draggable
+                            position={{x: 0, y: 0}}
+                            bounds={{
+                                left:
+                                    -(containefWidth * (sizeMap.x[index] - 6)) /
+                                    100,
+                                right:
+                                    (containefWidth * (sizeMap.x[index + 1] - 6)) /
+                                    100
+                            }}
+                            axis="x"
+                            onMouseDown={(e) => {
+                                console.log(`dragLine(e, 'x');`)
+                            }}
+                            onStop={(e, data) => {
+                                console.log(`onHandleStop(data, index);`);
+                            }}>
+                            <div
+                                className={styles['yline']}
+                                style={{
+                                    width: '2px',
+                                    marginLeft: '-1px',
+                                    height:
+                                        sizeMap.y
+                                            .slice(j.start - 1, j.end - 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + 'px',
+                                    left:
+                                        sizeMap.x
+                                            .slice(0, index + 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + '%',
+                                    top:
+                                        sizeMap.y
+                                            .slice(0, j.start - 1)
+                                            .reduce(
+                                                (accumulator, currentValue) =>
+                                                    accumulator + currentValue,
+                                                0
+                                            ) + 'px'
+                                }}></div>
+                        </Draggable>
+                    );
+                }
+            }
+    
+            alllines.push(bottomLine, topLIne, RightLine, LeftLine);
+        }
         return (
             <div
                 style={{
@@ -250,35 +254,46 @@ export default () => {
                     position: 'absolute',
                     top: 0,
                     left: 0,
-                    zIndex: 10
+                    zIndex: 10,
+                    overflow:"visible",
                 }}>
                 {alllines}
             </div>
         );
 
-    },[pageData,gridTemplateData,sizeMap]);
+    },[pageData,gridTemplateData,sizeMap,containefWidth]);
     useLayoutEffect(() => {
         setContainefWidth(containerRef.current.getBoundingClientRect().width);
     }, [gridTemplateData]);
     return (
-        <div style={{
-            position: 'relative',
-        }}>
-            <div
-                ref={containerRef}
-                style={{
-                    display: 'grid',
+        <div className={styles['responsive-layout-inner-container']}>
+            <div className={styles['responsive-layout-inner-header']}></div>
+            <div className={styles['responsive-layout-inner-content']}>
+            <div style={{
                     position: 'relative',
-                    width: '100%',
-                    gridTemplateRows: gridTemplateData.gridTemplateRows,
-                    gridTemplateColumns: gridTemplateData?.gridTemplateColumns,
+                    boxSizing: 'border-box',
                 }}>
-                {pageData.map((item, i) => (
-                    <ResponsiveItem data={item}/>
-                ))}
+                    <div
+                        data-com_type={'container'}
+                        ref={containerRef}
+                        style={{
+                            display: 'grid',
+                            position: 'relative',
+                            width: '100%',
+                            boxSizing: 'border-box',
+                            gridTemplateRows: gridTemplateData.gridTemplateRows,
+                            gridTemplateColumns: gridTemplateData?.gridTemplateColumns,
+                        }}>
+                        {pageData.map((item, i) => (
+                            <ResponsiveItem key={item.com_id} data={item}/>
+                        ))}
+                    </div>
             </div>
             {LineGroupContent}
+            </div>
+            <div className={styles['responsive-layout-inner-footer']}></div>
         </div>
+        
 
     )
 }

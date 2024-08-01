@@ -5,6 +5,7 @@ import Demo from './demo';
 import DemoResponsive from './demo/responsive-layout';
 import Result404 from './exception/404';
 import '@csstools/normalize.css';
+
 import {
     createBrowserRouter,
     BrowserRouter,
@@ -32,7 +33,5 @@ const router = createBrowserRouter([
 
 const root = createRoot(document.getElementById('app'));
 root.render(
-    <>
     <RouterProvider router={router} />
-    </>
 );

@@ -4,25 +4,24 @@ import {gridMap as defaultGridMap,includeData as defaultIncludeData } from "../s
 
 
 export const ResponsiveContext = createContext<{
-    select: string,
     state:Record<string,any>,
-    dispatch:any,
+    onSelect:any,
     pageData: any[],
 }>({
-    select: '',
     state: {},
-    dispatch: null,
+    onSelect: null,
     pageData: [],
 })
 
 const ResponsiveContextProvider = (props:{
     children: ReactNode;
 }) => {
-    const [select,setSelect] = useState('111');
     const reducer = (state,action) => {
         switch (action.type) {
-            case 'a':
-                return state;
+            case 'onSelect':
+                state.select = action.select;
+                console.log(state)
+                return {...state};
             default:
                 return state;
         }
@@ -48,6 +47,13 @@ const ResponsiveContextProvider = (props:{
         comps: [],
         dataBase: {},
     },reducerInit);
+
+    const onSelect = (com:string | null) => {
+        dispatch({
+            type: 'onSelect',
+            select: com
+        })
+    }
     const pageData = useMemo(() => {
         return state.comps.map((i) => {
             return state.dataBase[i];
@@ -55,9 +61,8 @@ const ResponsiveContextProvider = (props:{
     },[state.dataBase,state.comps]);
     return (
         <ResponsiveContext.Provider value={{
-            select,
             state,
-            dispatch,
+            onSelect,
             pageData
         }}> 
             {props.children}
