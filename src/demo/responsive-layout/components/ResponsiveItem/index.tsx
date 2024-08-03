@@ -5,14 +5,12 @@ import {ResponsiveContext} from '../../context';
 export default (props) => {
     const {onHandleTrigger} = useContext(ResponsiveContext);
     const {data} = props;
-    console.log(data)
     const items = [
         {label: '左右拆分',key: 'horizontal'},
         {label: '上下拆分',key: 'vertical'},
         {label: '刪除',key: 'onDelete'}
     ]
     const onClick = ({item, key}) => {
-        console.log(key,data.com_id);
         onHandleTrigger(key,data.com_id);
     }
     return (
