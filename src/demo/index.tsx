@@ -35,7 +35,7 @@ export default () => {
                 <div>解决：参考ts-loader文档的transpileOnly，使用fork-ts-checker-webpack-plugin插件编译加速ts-loader</div>
             <div>
                 <h4>todo</h4>
-                <div>接入ant-design</div>
+                <div><span style={{textDecoration : 'line-through'}}>接入ant-design</span></div>
                 <div>设置webpack-merge区分环境与打包</div>
                 <div>创建自己的prettir与eslint</div>
                 <div>管理pnpmrc与gh-pages不冲突</div>

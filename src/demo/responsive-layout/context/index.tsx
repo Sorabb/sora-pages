@@ -20,11 +20,15 @@ export const ResponsiveContext = createContext<{
     },
     onSelect:any,
     pageData: any[],
+    selectComSize: [number,number],
+    setSelectComSize: (array: [number,number]) => void,
     onHandleTrigger: (name,com) => void,
 }>({
     state: null,
     onSelect: null,
     pageData: [],
+    selectComSize: [0,0],
+    setSelectComSize: null,
     onHandleTrigger: null,
 })
 const splitGridHorizontal = (state,com_id) => {
@@ -217,7 +221,6 @@ const deleteItem = (state,com_id) => {
     }
     return {...state};
 }
-
 const ResponsiveContextProvider = (props:{
     children: ReactNode;
 }) => {
@@ -236,6 +239,7 @@ const ResponsiveContextProvider = (props:{
                 return state;
         }
     };
+
     const reducerInit = (state) => {
         for (const i of defaultIncludeData) {
             const newId = nanoid();
@@ -258,6 +262,17 @@ const ResponsiveContextProvider = (props:{
         dataBase: {},
     },reducerInit);
 
+    const [selectComSize,setSelectComSize] = useState<[number,number]>([0,0]);
+    useEffect(() => {
+        if (state.select && state.select != 'container') {
+            const selectdom = document.querySelector(`[data-com_id='${state.select}']`) as HTMLInputElement;
+            const rect = selectdom.getBoundingClientRect();
+            setSelectComSize([rect.width, rect.height]);
+        } else {
+            setSelectComSize([0,0]);
+        }
+    }, [state.select]);
+
     const onSelect = (com:string | null) => {
         dispatch({
             type: 'onSelect',
@@ -270,6 +285,7 @@ const ResponsiveContextProvider = (props:{
             select: com
         })
     }
+
     const pageData = useMemo(() => {
         return state.comps.map((i) => {
             return state.dataBase[i];
@@ -281,6 +297,8 @@ const ResponsiveContextProvider = (props:{
             state,
             onSelect,
             pageData,
+            selectComSize,
+            setSelectComSize,
             onHandleTrigger
         }}> 
             {props.children}

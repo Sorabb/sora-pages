@@ -23,6 +23,10 @@ $right-width: 250px;
     border-style: solid;
     border-color: #ddd;
     .workspace-attribute-title {
+      padding: 28px 16px;
+      font-size: 12px;
+    }
+    .workspace-attribute-line {
       padding: 8px 16px;
       font-size: 12px;
     }
@@ -49,6 +53,14 @@ $right-width: 250px;
       }
       .responsive-layout-main-content {
         flex: 1;
+        position: relative;
+        .responsive-layout-select-content {
+          position: absolute;
+          left: 0;
+          top: 0;
+          height: 0;
+          width: 100%;
+        }
       }
     }
   }
