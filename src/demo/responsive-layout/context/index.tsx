@@ -1,4 +1,4 @@
-import React, {createContext, ReactNode, useEffect, useMemo, useState,  useReducer} from "react";
+import React, {createContext, ReactNode, useEffect, useMemo, useState, useReducer, useRef} from "react";
 import {nanoid, makeGridMap, makeGridInfo, rearrangeGrid} from '../utils'
 import {gridMap, gridMap as defaultGridMap, includeData as defaultIncludeData} from "../settings/default";
 import lodash from "lodash";
@@ -21,15 +21,23 @@ export const ResponsiveContext = createContext<{
     onSelect:any,
     pageData: any[],
     selectComSize: [number,number],
-    setSelectComSize: (array: [number,number]) => void,
+    onHandleSetSelectComSize: (array: [number,number]) => void,
     onHandleTrigger: (name,com) => void,
+    onHandleChangeItemSize:(gridSizeMap) => void,
+    comDragingRef: {
+        current: boolean,
+    }
 }>({
     state: null,
     onSelect: null,
     pageData: [],
     selectComSize: [0,0],
-    setSelectComSize: null,
+    onHandleSetSelectComSize: null,
     onHandleTrigger: null,
+    onHandleChangeItemSize: null,
+    comDragingRef: {
+        current: false
+    }
 })
 const splitGridHorizontal = (state,com_id) => {
     const seletid = com_id;
@@ -235,6 +243,9 @@ const ResponsiveContextProvider = (props:{
                 return splitGridVertical(lodash.cloneDeep(state),action.select);
             case 'onDelete':
                 return deleteItem(lodash.cloneDeep(state),action.select);
+            case 'onChangeItemSize':
+                state.gridSizeMap = action.gridSizeMap;
+                return {...state};
             default:
                 return state;
         }
@@ -263,20 +274,30 @@ const ResponsiveContextProvider = (props:{
     },reducerInit);
 
     const [selectComSize,setSelectComSize] = useState<[number,number]>([0,0]);
-    useEffect(() => {
+
+    const onHandleSetSelectComSize = () => {
         if (state.select && state.select != 'container') {
             const selectdom = document.querySelector(`[data-com_id='${state.select}']`) as HTMLInputElement;
             const rect = selectdom.getBoundingClientRect();
-            setSelectComSize([rect.width, rect.height]);
+            setSelectComSize([Math.round(rect.width), Math.round(rect.height)]);
         } else {
             setSelectComSize([0,0]);
         }
-    }, [state.select]);
+    }
+    useEffect(() => {
+        onHandleSetSelectComSize();
+    }, [state.select,state.gridSizeMap]);
 
     const onSelect = (com:string | null) => {
         dispatch({
             type: 'onSelect',
             select: com
+        })
+    }
+    const onHandleChangeItemSize = (gridSizeMap) => {
+        dispatch({
+            type: 'onChangeItemSize',
+            gridSizeMap: gridSizeMap
         })
     }
     const onHandleTrigger = (name,com) => {
@@ -292,14 +313,18 @@ const ResponsiveContextProvider = (props:{
         });
     },[state.dataBase,state.comps]);
 
+    const comDragingRef = useRef(false);
+
     return (
         <ResponsiveContext.Provider value={{
             state,
             onSelect,
             pageData,
             selectComSize,
-            setSelectComSize,
-            onHandleTrigger
+            onHandleSetSelectComSize,
+            onHandleTrigger,
+            onHandleChangeItemSize,
+            comDragingRef
         }}> 
             {props.children}
         </ResponsiveContext.Provider>

@@ -4,10 +4,52 @@ import ResponsiveItem from "../ResponsiveItem";
 import Draggable from 'react-draggable';
 import {makeLines} from "../../utils";
 import styles from '../../style/index.module.scss';
+import lodash from "lodash";
 export default () => {
+    const {pageData,state:{gridSizeMap:sizeMap}, onHandleChangeItemSize,comDragingRef} = useContext(ResponsiveContext);
     const containerRef = useRef(null);
+    const resizingPosRef = useRef(false);
+    const dragPos = useRef({
+        startX: undefined,
+        startY: undefined,
+        dir: undefined
+    });
+    const dragLine = (e, dir) => {
+        resizingPosRef.current = true;
+        comDragingRef.current = true;
+        dragPos.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            dir: dir
+        };
+    };
+    const onHandleStop = (e, i, ex?: any) => {
+        const arr = lodash.cloneDeep(sizeMap);
+        comDragingRef.current = false;
+        if (dragPos.current.dir == 'x') {
+            const changeX = e.x;
+            const changePercent = Math.round(
+                (changeX / containefWidth) * 10000
+            );
+            arr.x[i] = (arr.x[i] * 100 + changePercent) / 100;
+            arr.x[i + 1] = (arr.x[i + 1] * 100 - changePercent) / 100;
+        } else if (dragPos.current.dir == 'y') {
+            const changeY = e.y;
+            arr.y[i] = arr.y[i] + changeY;
+            if (ex && ex.bottom) {
+                // 如果是最下面的一条线，只需要改变自己的高度，不需要减少下一层的高度
+            } else {
+                arr.y[i + 1] = arr.y[i + 1] - changeY;
+            }
+        }
+        dragPos.current = {
+            startX: undefined,
+            startY: undefined,
+            dir: undefined
+        };
+        onHandleChangeItemSize(arr);
+    };
     const [containefWidth, setContainefWidth] = useState(0);
-    const {pageData,state:{gridSizeMap:sizeMap}} = useContext(ResponsiveContext);
     const gridTemplateData = useMemo(() => {
         const gridTemplateData = {
             gridTemplateRows: '',
@@ -48,16 +90,16 @@ export default () => {
                 key={'bottomLine'}
                 position={{x: 0, y: 0}}
                 bounds={{
-                    top: -(sizeMap.y[sizeMap.y.length - 1] - 6)
+                    top: -(sizeMap.y[sizeMap.y.length - 1] - 30)
                 }}
                 axis="y"
                 onMouseDown={(e) => {
-                    console.log(`dragLine(e, 'y');`)
+                    dragLine(e, 'y');
                 }}
                 onStop={(e, data) => {
-                    console.log(`onHandleStop(data, sizeMap.y.length - 1, {
+                    onHandleStop(data, sizeMap.y.length - 1, {
                         bottom: true
-                    });`)
+                    });
                 }}>
                 <div
                     className={styles['xline']}
@@ -144,15 +186,15 @@ export default () => {
                         <Draggable
                             position={{x: 0, y: 0}}
                             bounds={{
-                                top: -(sizeMap.y[index] - 6),
-                                bottom: sizeMap.y[index + 1] - 6
+                                top: -(sizeMap.y[index] - 30),
+                                bottom: sizeMap.y[index + 1] - 30
                             }}
                             axis="y"
                             onMouseDown={(e) => {
-                                console.log(`dragLine(e, 'y');`)
+                                dragLine(e, 'y');
                             }}
                             onStop={(e, data) => {
-                                console.log(`onHandleStop(data, index);`)
+                                onHandleStop(data, index);
                             }}>
                             <div
                                 className={styles['xline']}
@@ -196,18 +238,18 @@ export default () => {
                             position={{x: 0, y: 0}}
                             bounds={{
                                 left:
-                                    -(containefWidth * (sizeMap.x[index] - 6)) /
-                                    100,
+                                    -(containefWidth * (sizeMap.x[index])) /
+                                    100 + 30,
                                 right:
-                                    (containefWidth * (sizeMap.x[index + 1] - 6)) /
-                                    100
+                                    (containefWidth * (sizeMap.x[index + 1])) /
+                                    100  - 30
                             }}
                             axis="x"
                             onMouseDown={(e) => {
-                                console.log(`dragLine(e, 'x');`)
+                                dragLine(e, 'x');
                             }}
                             onStop={(e, data) => {
-                                console.log(`onHandleStop(data, index);`);
+                                onHandleStop(data, index);
                             }}>
                             <div
                                 className={styles['yline']}
