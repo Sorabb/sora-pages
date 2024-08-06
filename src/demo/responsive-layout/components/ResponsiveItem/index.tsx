@@ -1,4 +1,4 @@
-import React, {useContext, useLayoutEffect, useMemo, useRef, useState} from "react";
+import React, {useContext, useLayoutEffect, useRef, useState} from "react";
 import { Dropdown } from 'antd';
 import {ResponsiveContext} from '../../context';
 
