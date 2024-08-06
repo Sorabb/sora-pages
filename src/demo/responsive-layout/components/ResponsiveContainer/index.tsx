@@ -5,8 +5,18 @@ import Draggable from 'react-draggable';
 import {makeLines} from "../../utils";
 import styles from '../../style/index.module.scss';
 import lodash from "lodash";
+import { Space, Button } from 'antd';
+import Svg1 from '../../svg/1.svg';
+import Svg2 from '../../svg/2.svg';
+import Svg3 from '../../svg/3.svg';
+import Svg4 from '../../svg/4.svg';
+import Svg5 from '../../svg/5.svg';
+import Svg6 from '../../svg/6.svg';
+import Svg7 from '../../svg/7.svg';
+import Svg8 from '../../svg/8.svg';
+import Svg9 from '../../svg/9.svg';
 export default () => {
-    const {pageData,state:{gridSizeMap:sizeMap}, onHandleChangeItemSize,comDragingRef} = useContext(ResponsiveContext);
+    const {pageData,state:{gridSizeMap:sizeMap,comps}, onHandleChangeItemSize,comDragingRef,onHandleSetGridGroup} = useContext(ResponsiveContext);
     const containerRef = useRef(null);
     const resizingPosRef = useRef(false);
     const dragPos = useRef({
@@ -78,7 +88,7 @@ export default () => {
         return gridTemplateData;
     }, [sizeMap]);
     const LineGroupContent = useMemo(() => {
-        if (containefWidth == 0) {
+        if (containefWidth == 0 || pageData.length == 0) {
             return <></>
         }
         const allGrid = pageData.map((i) => {
@@ -311,27 +321,98 @@ export default () => {
         <div className={styles['responsive-layout-inner-container']}>
             <div className={styles['responsive-layout-inner-header']}></div>
             <div className={styles['responsive-layout-inner-content']}>
-            <div style={{
-                    position: 'relative',
-                    boxSizing: 'border-box',
-                }}>
-                    <div
-                        data-com_type={'container'}
-                        ref={containerRef}
-                        style={{
-                            display: 'grid',
-                            position: 'relative',
-                            width: '100%',
-                            boxSizing: 'border-box',
-                            gridTemplateRows: gridTemplateData.gridTemplateRows,
-                            gridTemplateColumns: gridTemplateData?.gridTemplateColumns,
-                        }}>
-                        {pageData.map((item, i) => (
-                            <ResponsiveItem key={item.com_id} data={item}/>
-                        ))}
-                    </div>
-            </div>
-            {LineGroupContent}
+                <div style={{
+                        position: 'relative',
+                        boxSizing: 'border-box',
+                    }}>
+                        <div
+                            data-com_type={'container'}
+                            ref={containerRef}
+                            style={{
+                                display: 'grid',
+                                position: 'relative',
+                                width: '100%',
+                                boxSizing: 'border-box',
+                                gridTemplateRows: gridTemplateData.gridTemplateRows,
+                                gridTemplateColumns: gridTemplateData?.gridTemplateColumns,
+                            }}>
+                            {pageData.length > 0 ? pageData.map((item, i) => (
+                                <ResponsiveItem key={item.com_id} data={item}/>
+                            )) : (
+                                <div style={{border: '1px solid #ddd'}}>
+                                    <div style={{lineHeight: '20px',textAlign: 'center',padding: '40px'}}>请选择想要的布局</div>
+                                    <div style={{textAlign:'center', padding: '20px 0 60px'}}>
+                                        <Space>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg1 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(1)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg2 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(2)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg3 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(3)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg4 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(4)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg5 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(5)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg6 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(6)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg7 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(7)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg8 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(8)
+                                            }}></Button>
+                                            <Button style={{
+                                                background: '#fff',
+                                                width: 30,
+                                                height: 30
+                                            }} icon={<Svg9 />} type='default' onClick={() => {
+                                                onHandleSetGridGroup(9)
+                                            }}></Button>
+                                        </Space>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                </div>
+                {LineGroupContent}
             </div>
             <div className={styles['responsive-layout-inner-footer']}></div>
         </div>

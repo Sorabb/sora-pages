@@ -5,7 +5,7 @@ import type { MenuProps } from 'antd/es/menu';
 import { AppstoreOutlined, HomeOutlined } from '@ant-design/icons';
 const NavMenu = () => {
     let location = useLocation();
-    const items: MenuProps['items'] = [
+    const items= [
         {
             label: <Link to={'/'}>index</Link>,
             key: '/',
@@ -31,7 +31,10 @@ const NavMenu = () => {
 }
 export default () => {
     return (
-        <div>
+        <div style={{
+            display: 'flex',
+            flexDirection: 'row'
+        }}>
             <NavMenu />
             <Outlet /> 
         </div>

@@ -1,6 +1,6 @@
 import React, {createContext, ReactNode, useEffect, useMemo, useState, useReducer, useRef} from "react";
 import {nanoid, makeGridMap, makeGridInfo, rearrangeGrid} from '../utils'
-import {gridMap, gridMap as defaultGridMap, includeData as defaultIncludeData} from "../settings/default";
+import {gridMap, gridMap as defaultGridMap, includeData as defaultIncludeData,dataSizeJson} from "../settings/default";
 import lodash from "lodash";
 
 
@@ -8,24 +8,25 @@ import lodash from "lodash";
 export const ResponsiveContext = createContext<{
     state: {
         gridSizeMap: {
-            x: any[],
-            y: any[]
+            x: any[];
+            y: any[];
         },
-        select: null | string,
-        comps: string[],
+        select: null | string;
+        comps: string[];
         dataBase: Record<string,{
-            com_id: string,
-            grid: string
+            com_id: string;
+            grid: string;
         }>
-    },
-    onSelect:any,
-    pageData: any[],
-    selectComSize: [number,number],
-    onHandleSetSelectComSize: (array: [number,number]) => void,
-    onHandleTrigger: (name,com) => void,
-    onHandleChangeItemSize:(gridSizeMap) => void,
+    };
+    onSelect:any;
+    pageData: any[];
+    selectComSize: [number,number];
+    onHandleSetSelectComSize: (array: [number,number]) => void;
+    onHandleTrigger: (name,com) => void;
+    onHandleChangeItemSize:(gridSizeMap) => void;
+    onHandleSetGridGroup:(type:number) => void;
     comDragingRef: {
-        current: boolean,
+        current: boolean;
     }
 }>({
     state: null,
@@ -35,6 +36,7 @@ export const ResponsiveContext = createContext<{
     onHandleSetSelectComSize: null,
     onHandleTrigger: null,
     onHandleChangeItemSize: null,
+    onHandleSetGridGroup: null,
     comDragingRef: {
         current: false
     }
@@ -246,6 +248,9 @@ const ResponsiveContextProvider = (props:{
             case 'onChangeItemSize':
                 state.gridSizeMap = action.gridSizeMap;
                 return {...state};
+            case 'onChangeItems':
+                state = action.state;
+                return state;
             default:
                 return state;
         }
@@ -271,7 +276,7 @@ const ResponsiveContextProvider = (props:{
         select: null,
         comps: [],
         dataBase: {},
-    },reducerInit);
+    });
 
     const [selectComSize,setSelectComSize] = useState<[number,number]>([0,0]);
 
@@ -306,7 +311,31 @@ const ResponsiveContextProvider = (props:{
             select: com
         })
     }
-
+    const onHandleSetGridGroup = (type) => {
+        const target = dataSizeJson[type];
+        const state = {
+            gridSizeMap: {
+                x: [],
+                y: []
+            },
+            select: null,
+            comps: [],
+            dataBase: {}
+        };
+        state.gridSizeMap = target.map;
+        for (const i of target.data) {
+            const newId = nanoid();
+            state.dataBase[newId] = {
+                com_id: newId,
+                grid: i.grid,
+            }
+            state.comps.push(newId);
+        }
+        dispatch({
+            type: 'onChangeItems',
+            state: state
+        })
+    }
     const pageData = useMemo(() => {
         return state.comps.map((i) => {
             return state.dataBase[i];
@@ -324,7 +353,8 @@ const ResponsiveContextProvider = (props:{
             onHandleSetSelectComSize,
             onHandleTrigger,
             onHandleChangeItemSize,
-            comDragingRef
+            onHandleSetGridGroup,
+            comDragingRef,
         }}> 
             {props.children}
         </ResponsiveContext.Provider>
