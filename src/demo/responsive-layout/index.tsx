@@ -1,8 +1,10 @@
 import React, {useEffect, useContext, useState, useMemo, useRef} from "react";
-import {Input} from "antd";
+import { Input, Button, Popover } from "antd";
 import styles from './style/index.module.scss';
+import { QuestionCircleOutlined,GithubOutlined } from "@ant-design/icons";
 import ResponsiveContainer from './components/ResponsiveContainer';
 import ResponsiveContextProvider, {ResponsiveContext} from './context';
+
 const WorkspaceAttribute = () => {
     const {
         state: {
@@ -124,13 +126,6 @@ const ResponsiveLayout = () => {
     }, [select])
     return (
         <>
-            {/*<div>
-                <Link to={'/'}>index</Link>
-            </div>
-            <div>
-                <Link to={'/demo'}>demo</Link>
-            </div>
-            <div>responsive-layout321321</div>*/}
             <div className={styles['wrap']}
                  onClick={(e) => {
                      e.stopPropagation();
@@ -151,7 +146,23 @@ const ResponsiveLayout = () => {
                 <div className={styles['workspace-main']}>
                     <div className={styles['workspace-container']}>
                         <div className={styles['responsive-layout-container']}>
-                            <div className={styles['responsive-layout-main-title']}>responsive-layout</div>
+                            <div className={styles['responsive-layout-main-title']}>
+                                wix布局
+                                <Popover content={(
+                                    <>
+                                        <div>1.右键单元格可以拆分与删除</div>
+                                        <div>2.选中单元格右侧显示单元格宽高</div>
+                                        <div>3.拖动单元格之间的分割线可以改变单元格的宽高</div>
+                                        <div>4.容器内没有单元格时可以选择预设的几种布局</div>
+                                        <div>5.单元格有大小限制，太小将不可分割与拖动</div>
+                                    </>
+
+                                )}
+                                    title={'使用方法&包含功能'}>
+                                    <Button shape="circle" style={{marginLeft: '10px'}} type="text" icon={<QuestionCircleOutlined />} />
+                                </Popover>
+                                <Button shape="circle" style={{marginLeft: '10px'}} icon={<GithubOutlined />} target={'_blank'} title={'demo源码地址'} href={'https://github.com/Sorabb/sora-pages/tree/master/src/demo/responsive-layout'} />
+                            </div>
                             <div className={styles['responsive-layout-main-content']}
 
                                  onMouseOver={(e) => {
