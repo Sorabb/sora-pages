@@ -43,10 +43,10 @@ export default () => {
                 <div>
                     <span style={{ textDecoration: 'line-through' }}>创建自己的prettirn</span>
                 </div>
-                <div>创建自己的peslint</div>
+                <div>创建自己的eslint</div>
                 <div>
                     参考
-                    <a href="https://turbo.build" target="_blank">
+                    <a href="https://juejin.cn/post/7289661052807413818" target="_blank">
                         文章
                     </a>
                 </div>
@@ -56,7 +56,7 @@ export default () => {
                 </div>
                 <div>
                     从webpack更换成{' '}
-                    <a href="https://juejin.cn/post/7289661052807413818" target="_blank">
+                    <a href="https://turbo.build" target="_blank">
                         Turborepo
                     </a>
                 </div>
