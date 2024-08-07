@@ -1,7 +1,6 @@
 {
   "printWidth": 120,
   "tabWidth": 4,
-  "Semicolons": true,
   "semi": true,
   "singleQuote": true,
   "quoteProps": "as-needed",
@@ -9,9 +8,7 @@
   "trailingComma": "all",
   "bracketSpacing": true,
   "bracketSameLine": true,
-  "jsxBracketSameLine": true,
   "arrowParens": "always",
-  "parser": "babel",
   "requirePragma": false,
   "insertPragma": false,
   "proseWrap": "preserve",

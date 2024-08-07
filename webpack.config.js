@@ -6,10 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProduction = process.env.NODE_ENV == 'production';
 
-
 const stylesHandler = 'style-loader';
-
-
 
 const config = {
     entry: './src/app',
@@ -35,10 +32,12 @@ const config = {
         rules: [
             {
                 test: /\.(ts|tsx)$/i,
-                use: [{
-                    loader: 'ts-loader',
-
-                },'babel-loader'],
+                use: [
+                    {
+                        loader: 'ts-loader',
+                    },
+                    'babel-loader',
+                ],
                 exclude: ['/node_modules/'],
             },
             {
@@ -61,12 +60,7 @@ const config = {
             {
                 test: /\.scss$/i,
                 exclude: /\.module\.scss$/,
-                use: [
-                    stylesHandler,
-                    'css-loader',
-                    'postcss-loader',
-                    'sass-loader',
-                ],
+                use: [stylesHandler, 'css-loader', 'postcss-loader', 'sass-loader'],
             },
             {
                 test: /\.css$/i,
@@ -79,7 +73,7 @@ const config = {
             {
                 test: /\.svg$/,
                 use: ['@svgr/webpack'],
-            }
+            },
 
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/

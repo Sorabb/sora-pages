@@ -1,47 +1,53 @@
-import React, {createContext, ReactNode, useEffect, useMemo, useState, useReducer, useRef} from "react";
-import {nanoid, makeGridMap, makeGridInfo, rearrangeGrid} from '../utils'
-import {gridMap, gridMap as defaultGridMap, includeData as defaultIncludeData,dataSizeJson} from "../settings/default";
-import lodash from "lodash";
-
-
+import React, { createContext, ReactNode, useEffect, useMemo, useState, useReducer, useRef } from 'react';
+import { nanoid, makeGridMap, makeGridInfo, rearrangeGrid } from '../utils';
+import {
+    gridMap,
+    gridMap as defaultGridMap,
+    includeData as defaultIncludeData,
+    dataSizeJson,
+} from '../settings/default';
+import lodash from 'lodash';
 
 export const ResponsiveContext = createContext<{
     state: {
         gridSizeMap: {
             x: any[];
             y: any[];
-        },
+        };
         select: null | string;
         comps: string[];
-        dataBase: Record<string,{
-            com_id: string;
-            grid: string;
-        }>
+        dataBase: Record<
+            string,
+            {
+                com_id: string;
+                grid: string;
+            }
+        >;
     };
-    onSelect:any;
+    onSelect: any;
     pageData: any[];
-    selectComSize: [number,number];
-    onHandleSetSelectComSize: (array: [number,number]) => void;
-    onHandleTrigger: (name,com) => void;
-    onHandleChangeItemSize:(gridSizeMap) => void;
-    onHandleSetGridGroup:(type:number) => void;
+    selectComSize: [number, number];
+    onHandleSetSelectComSize: (array: [number, number]) => void;
+    onHandleTrigger: (name, com) => void;
+    onHandleChangeItemSize: (gridSizeMap) => void;
+    onHandleSetGridGroup: (type: number) => void;
     comDragingRef: {
         current: boolean;
-    }
+    };
 }>({
     state: null,
     onSelect: null,
     pageData: [],
-    selectComSize: [0,0],
+    selectComSize: [0, 0],
     onHandleSetSelectComSize: null,
     onHandleTrigger: null,
     onHandleChangeItemSize: null,
     onHandleSetGridGroup: null,
     comDragingRef: {
-        current: false
-    }
-})
-const splitGridHorizontal = (state,com_id) => {
+        current: false,
+    },
+});
+const splitGridHorizontal = (state, com_id) => {
     const seletid = com_id;
     const dataBase = state.dataBase;
     const selectcom = dataBase[seletid];
@@ -52,21 +58,13 @@ const splitGridHorizontal = (state,com_id) => {
     const targetGrid = selectcom.grid.split('/').map(Number);
     const gridSizeMap = state.gridSizeMap;
     // 所占单元格数为奇数，先把所在格中间行扩充一列
-    const midNum =
-        Math.ceil((targetGrid[3] - targetGrid[1]) / 2) +
-        targetGrid[1] -
-        1;
+    const midNum = Math.ceil((targetGrid[3] - targetGrid[1]) / 2) + targetGrid[1] - 1;
     if ((targetGrid[3] - targetGrid[1]) % 2 == 1) {
         for (const i of ogridMap) {
             i.splice(midNum, 0, i[midNum - 1]);
         }
         const mapx = gridSizeMap.x;
-        mapx.splice(
-            midNum - 1,
-            1,
-            (mapx[midNum - 1] / 2),
-            (mapx[midNum - 1] / 2)
-        );
+        mapx.splice(midNum - 1, 1, mapx[midNum - 1] / 2, mapx[midNum - 1] / 2);
     }
     const newId = nanoid();
     const width = ogridMap[0].length;
@@ -81,16 +79,16 @@ const splitGridHorizontal = (state,com_id) => {
     const gridInfo = makeGridInfo(ogridMap, gridSizeMap);
     state.dataBase[newId] = {
         com_id: newId,
-        grid: ''
+        grid: '',
     };
     state.comps.push(newId);
     for (const i in gridInfo) {
         state.dataBase[i].grid = gridInfo[i].join('/');
     }
-    return {...state};
-}
+    return { ...state };
+};
 
-const splitGridVertical = (state,com_id) => {
+const splitGridVertical = (state, com_id) => {
     const seletid = com_id;
     const dataBase = state.dataBase;
     const selectcom = dataBase[seletid];
@@ -101,19 +99,11 @@ const splitGridVertical = (state,com_id) => {
     const targetGrid = selectcom.grid.split('/').map(Number);
     const gridSizeMap = state.gridSizeMap;
     // 所占单元格数为奇数，先把所在格中间行扩充一行
-    const midNum =
-        Math.ceil((targetGrid[2] - targetGrid[0]) / 2) +
-        targetGrid[0] -
-        1;
+    const midNum = Math.ceil((targetGrid[2] - targetGrid[0]) / 2) + targetGrid[0] - 1;
     if ((targetGrid[2] - targetGrid[0]) % 2 == 1) {
         ogridMap.splice(midNum, 0, [...ogridMap[midNum - 1]]);
         const mapy = gridSizeMap.y;
-        mapy.splice(
-            midNum - 1,
-            1,
-            (mapy[midNum - 1] / 2),
-            (mapy[midNum - 1] / 2)
-        );
+        mapy.splice(midNum - 1, 1, mapy[midNum - 1] / 2, mapy[midNum - 1] / 2);
     }
     const newId = nanoid();
     const width = ogridMap[0].length;
@@ -128,29 +118,27 @@ const splitGridVertical = (state,com_id) => {
     const gridInfo = makeGridInfo(ogridMap, gridSizeMap);
     state.dataBase[newId] = {
         com_id: newId,
-        grid: ''
+        grid: '',
     };
     state.comps.push(newId);
     for (const i in gridInfo) {
         state.dataBase[i].grid = gridInfo[i].join('/');
     }
-    return {...state};
-}
+    return { ...state };
+};
 
-const deleteItem = (state,com_id) => {
+const deleteItem = (state, com_id) => {
     if (state.comps.length == 1) {
         state.gridSizeMap = {
             x: [],
-            y: []
-        }
+            y: [],
+        };
     } else {
         const arr = state.comps.map((i) => {
             return state.dataBase[i];
         });
         const ogridMap = makeGridMap(arr);
-        const targetGrid = state.dataBase[com_id].grid
-            .split('/')
-            .map(Number);
+        const targetGrid = state.dataBase[com_id].grid.split('/').map(Number);
         // 先左后右，再上最后下
         let canDel = false;
         const y = targetGrid[0] - 1;
@@ -160,8 +148,7 @@ const deleteItem = (state,com_id) => {
         if (x > 0 && !canDel) {
             // ←
             if (
-                ogridMap[y]?.[x - 1] !=
-                ogridMap[y - 1]?.[x - 1] &&
+                ogridMap[y]?.[x - 1] != ogridMap[y - 1]?.[x - 1] &&
                 ogridMap[ye - 1]?.[x - 1] != ogridMap[ye]?.[x - 1]
             ) {
                 canDel = true;
@@ -174,10 +161,7 @@ const deleteItem = (state,com_id) => {
         }
         if (xe < ogridMap[0].length && !canDel) {
             // →
-            if (
-                ogridMap[y]?.[xe] != ogridMap[y - 1]?.[xe] &&
-                ogridMap[ye]?.[xe] != ogridMap[ye - 1]?.[xe]
-            ) {
+            if (ogridMap[y]?.[xe] != ogridMap[y - 1]?.[xe] && ogridMap[ye]?.[xe] != ogridMap[ye - 1]?.[xe]) {
                 canDel = true;
                 for (let xi = x; xi < xe; xi++) {
                     for (let yi = y; yi < ye; yi++) {
@@ -189,8 +173,7 @@ const deleteItem = (state,com_id) => {
         if (y > 0 && !canDel) {
             // ↑
             if (
-                ogridMap[y - 1]?.[x] !=
-                ogridMap[y - 1]?.[x - 1] &&
+                ogridMap[y - 1]?.[x] != ogridMap[y - 1]?.[x - 1] &&
                 ogridMap[y - 1]?.[xe - 1] != ogridMap[y - 1]?.[xe]
             ) {
                 canDel = true;
@@ -203,10 +186,7 @@ const deleteItem = (state,com_id) => {
         }
         if (y < ogridMap.length && !canDel) {
             // ↓
-            if (
-                ogridMap[ye]?.[x - 1] != ogridMap[ye]?.[x] &&
-                ogridMap[ye]?.[xe - 1] != ogridMap[ye]?.[xe]
-            ) {
+            if (ogridMap[ye]?.[x - 1] != ogridMap[ye]?.[x] && ogridMap[ye]?.[xe - 1] != ogridMap[ye]?.[xe]) {
                 canDel = true;
                 for (let xi = x; xi < xe; xi++) {
                     for (let yi = y; yi < ye; yi++) {
@@ -215,39 +195,34 @@ const deleteItem = (state,com_id) => {
                 }
             }
         }
-        const gridInfo = makeGridInfo(
-            ogridMap,
-            state.gridSizeMap
-        );
+        const gridInfo = makeGridInfo(ogridMap, state.gridSizeMap);
         for (const i in gridInfo) {
             state.dataBase[i].grid = gridInfo[i].join('/');
         }
     }
 
-    state.comps = state.comps.filter((i) => i!= com_id);
+    state.comps = state.comps.filter((i) => i != com_id);
     delete state.dataBase[com_id];
     if (state.select == com_id) {
         state.select = null;
     }
-    return {...state};
-}
-const ResponsiveContextProvider = (props:{
-    children: ReactNode;
-}) => {
-    const reducer = (state,action) => {
+    return { ...state };
+};
+const ResponsiveContextProvider = (props: { children: ReactNode }) => {
+    const reducer = (state, action) => {
         switch (action.type) {
             case 'onSelect':
                 state.select = action.select;
-                return {...state};
+                return { ...state };
             case 'horizontal':
-                return splitGridHorizontal(lodash.cloneDeep(state),action.select);
+                return splitGridHorizontal(lodash.cloneDeep(state), action.select);
             case 'vertical':
-                return splitGridVertical(lodash.cloneDeep(state),action.select);
+                return splitGridVertical(lodash.cloneDeep(state), action.select);
             case 'onDelete':
-                return deleteItem(lodash.cloneDeep(state),action.select);
+                return deleteItem(lodash.cloneDeep(state), action.select);
             case 'onChangeItemSize':
                 state.gridSizeMap = action.gridSizeMap;
-                return {...state};
+                return { ...state };
             case 'onChangeItems':
                 state = action.state;
                 return state;
@@ -262,23 +237,23 @@ const ResponsiveContextProvider = (props:{
             state.comps.push(newId);
             state.dataBase[newId] = {
                 com_id: newId,
-                grid: i.grid
-            }
+                grid: i.grid,
+            };
         }
         state.gridSizeMap = defaultGridMap;
         return state;
-    }
+    };
     const [state, dispatch] = useReducer(reducer, {
         gridSizeMap: {
             x: [],
-            y: []
+            y: [],
         },
         select: null,
         comps: [],
         dataBase: {},
     });
 
-    const [selectComSize,setSelectComSize] = useState<[number,number]>([0,0]);
+    const [selectComSize, setSelectComSize] = useState<[number, number]>([0, 0]);
 
     const onHandleSetSelectComSize = () => {
         if (state.select && state.select != 'container') {
@@ -286,41 +261,41 @@ const ResponsiveContextProvider = (props:{
             const rect = selectdom.getBoundingClientRect();
             setSelectComSize([Math.round(rect.width), Math.round(rect.height)]);
         } else {
-            setSelectComSize([0,0]);
+            setSelectComSize([0, 0]);
         }
-    }
+    };
     useEffect(() => {
         onHandleSetSelectComSize();
-    }, [state.select,state.gridSizeMap]);
+    }, [state.select, state.gridSizeMap]);
 
-    const onSelect = (com:string | null) => {
+    const onSelect = (com: string | null) => {
         dispatch({
             type: 'onSelect',
-            select: com
-        })
-    }
+            select: com,
+        });
+    };
     const onHandleChangeItemSize = (gridSizeMap) => {
         dispatch({
             type: 'onChangeItemSize',
-            gridSizeMap: gridSizeMap
-        })
-    }
-    const onHandleTrigger = (name,com) => {
+            gridSizeMap: gridSizeMap,
+        });
+    };
+    const onHandleTrigger = (name, com) => {
         dispatch({
             type: name,
-            select: com
-        })
-    }
+            select: com,
+        });
+    };
     const onHandleSetGridGroup = (type) => {
         const target = dataSizeJson[type];
         const state = {
             gridSizeMap: {
                 x: [],
-                y: []
+                y: [],
             },
             select: null,
             comps: [],
-            dataBase: {}
+            dataBase: {},
         };
         state.gridSizeMap = target.map;
         for (const i of target.data) {
@@ -328,36 +303,37 @@ const ResponsiveContextProvider = (props:{
             state.dataBase[newId] = {
                 com_id: newId,
                 grid: i.grid,
-            }
+            };
             state.comps.push(newId);
         }
         dispatch({
             type: 'onChangeItems',
-            state: state
-        })
-    }
+            state: state,
+        });
+    };
     const pageData = useMemo(() => {
         return state.comps.map((i) => {
             return state.dataBase[i];
         });
-    },[state.dataBase,state.comps]);
+    }, [state.dataBase, state.comps]);
 
     const comDragingRef = useRef(false);
 
     return (
-        <ResponsiveContext.Provider value={{
-            state,
-            onSelect,
-            pageData,
-            selectComSize,
-            onHandleSetSelectComSize,
-            onHandleTrigger,
-            onHandleChangeItemSize,
-            onHandleSetGridGroup,
-            comDragingRef,
-        }}> 
+        <ResponsiveContext.Provider
+            value={{
+                state,
+                onSelect,
+                pageData,
+                selectComSize,
+                onHandleSetSelectComSize,
+                onHandleTrigger,
+                onHandleChangeItemSize,
+                onHandleSetGridGroup,
+                comDragingRef,
+            }}>
             {props.children}
         </ResponsiveContext.Provider>
-    )
-}
-export default ResponsiveContextProvider
+    );
+};
+export default ResponsiveContextProvider;
