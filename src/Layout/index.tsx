@@ -13,7 +13,7 @@ const NavMenu = () => {
         },
         {
             label: 'demo',
-            key: '/demo',
+            key: 'demo',
             icon: <AppstoreOutlined />,
             children: [
                 {
