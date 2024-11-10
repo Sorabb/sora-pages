@@ -18,7 +18,7 @@ const NavMenu = () => {
             children: [
                 {
                     label: <Link to={'/demo'}>demo</Link>,
-                    key: '/demo',
+                    key: 'demo',
                 },
                 {
                     label: (
